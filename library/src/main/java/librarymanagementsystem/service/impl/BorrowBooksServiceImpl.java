@@ -26,7 +26,6 @@ import librarymanagementsystem.repo.BorrowBooksRepo;
 import librarymanagementsystem.repo.UserRepo;
 import librarymanagementsystem.service.BooksService;
 import librarymanagementsystem.service.BorrowBooksService;
-import librarymanagementsystem.service.UserService;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
