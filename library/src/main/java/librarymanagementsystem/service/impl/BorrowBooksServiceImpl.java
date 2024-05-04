@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.criteria.Predicate;
@@ -21,6 +23,7 @@ import librarymanagementsystem.model.request.BorrowBooksRequest;
 import librarymanagementsystem.model.request.UpdateBorrowBooksStatusRequest;
 import librarymanagementsystem.model.response.BorrowBooksResponse;
 import librarymanagementsystem.repo.BorrowBooksRepo;
+import librarymanagementsystem.repo.UserRepo;
 import librarymanagementsystem.service.BooksService;
 import librarymanagementsystem.service.BorrowBooksService;
 import librarymanagementsystem.service.UserService;
@@ -31,7 +34,7 @@ import lombok.AllArgsConstructor;
 public class BorrowBooksServiceImpl implements BorrowBooksService{
 
     private final BooksService booksService;
-    private final UserService userService;
+    private final UserRepo userRepo;
     private final BorrowBooksRepo borrowBooksRepo;
     
     @Override
@@ -49,7 +52,9 @@ public class BorrowBooksServiceImpl implements BorrowBooksService{
         findBooks.setStatus(EBooks.BOOKED);
         booksService.updateBooks(findBooks);
 
-        User findUser = userService.getUserById(booksRequest.getUserId());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User findUser = userRepo.getUserByUserCredential_Username(username);
 
         BorrowBooks newBorrowBooks = BorrowBooks.builder()
         .user(findUser)

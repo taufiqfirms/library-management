@@ -1,16 +1,14 @@
 package librarymanagementsystem.service;
 
-
-
 import org.springframework.data.domain.Page;
 
 import librarymanagementsystem.entity.User;
+import librarymanagementsystem.entity.UserCredential;
 import librarymanagementsystem.model.request.UserRequest;
-import librarymanagementsystem.model.response.UserResponse;
 
-public interface UserService {
+public interface UserService{
 
-    UserResponse register(UserRequest userRequest);
+    User register(UserRequest userRequest, UserCredential userCredential);
     User getUserById(String id);
     User updateUser(User user);
     void deleteUserById(String id);

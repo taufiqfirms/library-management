@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,12 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import librarymanagementsystem.entity.Books;
-import librarymanagementsystem.entity.User;
 import librarymanagementsystem.model.request.BookRequest;
-import librarymanagementsystem.model.request.UserRequest;
 import librarymanagementsystem.model.response.BooksResponse;
 import librarymanagementsystem.model.response.PagingResponse;
-import librarymanagementsystem.model.response.UserResponse;
 import librarymanagementsystem.model.response.WebResponse;
 import librarymanagementsystem.service.BooksService;
 import lombok.AllArgsConstructor;
@@ -34,7 +33,8 @@ public class BooksController {
 
     private final BooksService booksService;
 
-     @PostMapping("/register")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody BookRequest bookRequest){
         BooksResponse booksResponse = booksService.register(bookRequest);
         WebResponse<BooksResponse> response = WebResponse.<BooksResponse>builder()
@@ -45,6 +45,7 @@ public class BooksController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping(path = "/{id}")
     public ResponseEntity<?> getBooksById(@PathVariable String id){
         Books findBooks = booksService.getBooksById(id);
@@ -56,7 +57,8 @@ public class BooksController {
     return ResponseEntity.ok(response);
     }
 
-     @DeleteMapping(path = "/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @DeleteMapping(path = "/{id}")
     public ResponseEntity<?> deleteBooksById(@PathVariable String id){
         booksService.deleteBooksById(id);
         WebResponse<String> response = WebResponse.<String>builder()
@@ -67,6 +69,7 @@ public class BooksController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PutMapping
     public ResponseEntity<?> updateBooks(@RequestBody Books books){
         Books updateBooks = booksService.updateBooks(books);
@@ -78,7 +81,7 @@ public class BooksController {
         return ResponseEntity.ok(response);
     }
 
-
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping
     public ResponseEntity<?> getAll(@RequestParam(defaultValue = "1") Integer page,
                                         @RequestParam(defaultValue = "10") Integer size){

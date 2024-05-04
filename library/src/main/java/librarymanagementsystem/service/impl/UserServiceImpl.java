@@ -9,9 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import librarymanagementsystem.constant.ERole;
 import librarymanagementsystem.entity.User;
+import librarymanagementsystem.entity.UserCredential;
 import librarymanagementsystem.model.request.UserRequest;
-import librarymanagementsystem.model.response.UserResponse;
+
 import librarymanagementsystem.repo.UserRepo;
 import librarymanagementsystem.service.UserService;
 import lombok.AllArgsConstructor;
@@ -23,18 +25,16 @@ public class UserServiceImpl implements UserService{
     private final UserRepo userRepo;
     
     @Override
-    public UserResponse register(UserRequest userRequest) {
+    public User register(UserRequest userRequest, UserCredential userCredential) {
         User newUser = User.builder()
         .name(userRequest.getName())
         .email(userRequest.getEmail())
+        .roles(ERole.ROLE_USER)
+        .userCredential(userCredential)
         .build();
 
         User savedUser = userRepo.saveAndFlush(newUser);
-        return UserResponse.builder()
-        .id(savedUser.getId())
-        .name(savedUser.getName())
-        .email(savedUser.getEmail())
-        .build();
+        return savedUser;
     }
 
     @Override

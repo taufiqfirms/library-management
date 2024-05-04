@@ -18,9 +18,6 @@ import lombok.NoArgsConstructor;
 public class BorrowBooksRequest {
 
     @NotEmpty
-    private String userId;
-
-    @NotEmpty
     private String booksId;
 
     @NotNull

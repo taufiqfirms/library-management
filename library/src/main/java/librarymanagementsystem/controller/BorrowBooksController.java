@@ -2,11 +2,11 @@ package librarymanagementsystem.controller;
 
 import java.util.Date;
 import java.util.List;
-import java.util.ListIterator;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +33,7 @@ public class BorrowBooksController {
 
     private final BorrowBooksService borrowBooksService;
 
+    @PreAuthorize("hasAnyRole('USER')")
     @PostMapping("/borrowed")
     public ResponseEntity<?> borrowBooks(@RequestBody BorrowBooksRequest borrowBooksRequest){
         BorrowBooksResponse borrowResponse = borrowBooksService.borrowBook(borrowBooksRequest);
@@ -45,6 +46,7 @@ public class BorrowBooksController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping
     public ResponseEntity<?> getAllBorrowedBooks(
         @RequestParam(defaultValue = "1") Integer page,
@@ -72,6 +74,7 @@ public class BorrowBooksController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PutMapping("/status/{bookingId}")
     public ResponseEntity<?> updateBorrowingStatus(
         @PathVariable("bookingId") String bookingId,
