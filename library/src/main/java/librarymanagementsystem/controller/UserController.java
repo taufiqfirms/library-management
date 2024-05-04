@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
+import librarymanagementsystem.entity.Books;
 import librarymanagementsystem.entity.User;
 import librarymanagementsystem.model.request.UserRequest;
 import librarymanagementsystem.model.response.PagingResponse;
@@ -40,28 +41,6 @@ public class UserController {
         .data(userResponse)
         .build();
         return ResponseEntity.ok(response);
-    }
-
-    @GetMapping
-    public ResponseEntity<?> getAllUser(@RequestParam(defaultValue = "1") Integer page,
-                                        @RequestParam(defaultValue = "10") Integer size){
-            
-            Page<User> userList = userService.getAllUser(page, size);
-
-            PagingResponse pagingResponse = PagingResponse.builder()
-            .page(page)
-            .size(size)
-            .totalPages(userList.getTotalPages())
-            .totalElement(userList.getTotalElements())
-            .build();
-
-            WebResponse<List<User>> response = WebResponse.<List<User>>builder()
-            .status(HttpStatus.OK.getReasonPhrase())
-            .message("Success get list User")
-            .paging(pagingResponse)
-            .data(userList.getContent())
-            .build();
-            return ResponseEntity.ok(response);
     }
 
     @GetMapping(path = "/{id}")
@@ -95,5 +74,27 @@ public class UserController {
                 .data(updateUser)
                 .build();
         return ResponseEntity.ok(response);
+    }
+
+     @GetMapping
+    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "1") Integer page,
+                                        @RequestParam(defaultValue = "10") Integer size){
+            
+            Page<User> bookList = userService.getAll(page, size);
+
+            PagingResponse pagingResponse = PagingResponse.builder()
+            .page(page)
+            .size(size)
+            .totalPages(bookList.getTotalPages())
+            .totalElement(bookList.getTotalElements())
+            .build();
+
+            WebResponse<List<User>> response = WebResponse.<List<User>>builder()
+            .status(HttpStatus.OK.getReasonPhrase())
+            .message("Success get list User")
+            .paging(pagingResponse)
+            .data(bookList.getContent())
+            .build();
+            return ResponseEntity.ok(response);
     }
 }

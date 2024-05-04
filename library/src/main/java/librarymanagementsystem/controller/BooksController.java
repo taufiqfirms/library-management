@@ -45,11 +45,45 @@ public class BooksController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<?> getBooksById(@PathVariable String id){
+        Books findBooks = booksService.getBooksById(id);
+        WebResponse<Books> response = WebResponse.<Books>builder()
+        .status(HttpStatus.OK.getReasonPhrase())
+        .message("Success get Books by id ")
+        .data(findBooks)
+        .build();
+    return ResponseEntity.ok(response);
+    }
+
+     @DeleteMapping(path = "/{id}")
+    public ResponseEntity<?> deleteBooksById(@PathVariable String id){
+        booksService.deleteBooksById(id);
+        WebResponse<String> response = WebResponse.<String>builder()
+                .status(HttpStatus.OK.getReasonPhrase())
+                .message("Success delete Books by id ")
+                .data("OK")
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping
+    public ResponseEntity<?> updateBooks(@RequestBody Books books){
+        Books updateBooks = booksService.updateBooks(books);
+        WebResponse<Books> response = WebResponse.<Books>builder()
+                .status(HttpStatus.OK.getReasonPhrase())
+                .message("Success update Books by id ")
+                .data(updateBooks)
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+
     @GetMapping
-    public ResponseEntity<?> getAllBook(@RequestParam(defaultValue = "1") Integer page,
+    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "1") Integer page,
                                         @RequestParam(defaultValue = "10") Integer size){
             
-            Page<Books> bookList = booksService.getAllBooks(page, size);
+            Page<Books> bookList = booksService.getAll(page, size);
 
             PagingResponse pagingResponse = PagingResponse.builder()
             .page(page)
@@ -67,36 +101,4 @@ public class BooksController {
             return ResponseEntity.ok(response);
     }
 
-    @GetMapping(path = "/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable String id){
-        Books findBooks = booksService.getBooksById(id);
-        WebResponse<Books> response = WebResponse.<Books>builder()
-        .status(HttpStatus.OK.getReasonPhrase())
-        .message("Success get Books by id ")
-        .data(findBooks)
-        .build();
-    return ResponseEntity.ok(response);
-    }
-
-     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<?> deleteUserById(@PathVariable String id){
-        booksService.deleteBooksById(id);
-        WebResponse<String> response = WebResponse.<String>builder()
-                .status(HttpStatus.OK.getReasonPhrase())
-                .message("Success delete Books by id ")
-                .data("OK")
-                .build();
-        return ResponseEntity.ok(response);
-    }
-
-    @PutMapping
-    public ResponseEntity<?> updateUserById(@RequestBody Books books){
-        Books updateBooks = booksService.updateBooks(books);
-        WebResponse<Books> response = WebResponse.<Books>builder()
-                .status(HttpStatus.OK.getReasonPhrase())
-                .message("Success update Books by id ")
-                .data(updateBooks)
-                .build();
-        return ResponseEntity.ok(response);
-    }
 }

@@ -38,17 +38,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Page<User> getAllUser(Integer page, Integer size) {
-         if (page <=0) {
-            page = 1;
-        }
-        Pageable pageable = PageRequest.of(page-1, size);
-        return userRepo.findAll(pageable);
-    }
-
-    @Override
     public User getUserById(String id) {
-         Optional<User> optionalUser = userRepo.findById(id);
+         Optional<User> optionalUser = userRepo.getUserById(id);
         if (optionalUser.isPresent()) return optionalUser.get();
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id : " + id + " Not Found");
     }
@@ -62,7 +53,16 @@ public class UserServiceImpl implements UserService{
     @Override
     public void deleteUserById(String id) {
         this.getUserById(id);
-        userRepo.deleteById(id);
+        userRepo.deleteUser(id);
+    }
+
+    @Override
+    public Page<User> getAll(Integer page, Integer size) {
+        if (page <=0) {
+            page = 1;
+        }
+        Pageable pageable = PageRequest.of(page-1, size);
+        return userRepo.getUser(pageable);
     }
 
 }

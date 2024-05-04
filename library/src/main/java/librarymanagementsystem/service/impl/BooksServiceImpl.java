@@ -16,6 +16,7 @@ import librarymanagementsystem.model.request.BookRequest;
 import librarymanagementsystem.model.response.BooksResponse;
 import librarymanagementsystem.repo.BooksRepo;
 import librarymanagementsystem.service.BooksService;
+import java.util.List;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -42,17 +43,8 @@ public class BooksServiceImpl implements BooksService{
     }
 
     @Override
-    public Page<Books> getAllBooks(Integer page, Integer size) {
-         if (page <=0) {
-            page = 1;
-        }
-        Pageable pageable = PageRequest.of(page-1, size);
-        return booksRepo.findAll(pageable);
-    }
-
-    @Override
     public Books getBooksById(String id) {
-         Optional<Books> optionalBooks = booksRepo.findById(id);
+         Optional<Books> optionalBooks = booksRepo.getBooksById(id);
         if (optionalBooks.isPresent()) return optionalBooks.get();
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book with id : " + id + " Not Found");
     }
@@ -66,7 +58,16 @@ public class BooksServiceImpl implements BooksService{
     @Override
     public void deleteBooksById(String id) {
         this.getBooksById(id);
-        booksRepo.deleteById(id);
+        booksRepo.deleteBooks(id);
+    }
+
+    @Override
+    public Page<Books> getAll(Integer page, Integer size) {
+        if (page <=0) {
+            page = 1;
+        }
+        Pageable pageable = PageRequest.of(page-1, size);
+        return booksRepo.getBooks(pageable);
     }
 
 }

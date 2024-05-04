@@ -9,9 +9,9 @@ import librarymanagementsystem.model.response.BooksResponse;
 public interface BooksService {
 
     BooksResponse register(BookRequest bookRequest);
-    Page<Books> getAllBooks(Integer page, Integer size);
     Books getBooksById(String id);
     Books updateBooks(Books books);
     void deleteBooksById(String id);
+    Page<Books> getAll(Integer page, Integer size);
 
 }
